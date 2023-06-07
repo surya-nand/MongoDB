@@ -1,20 +1,22 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const dotenv = require('dotenv')
 
 const app = express();
+dotenv.config()
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("./public"));
 
+SERVER = 'mongodb+srv://user:mongo123@cluster0.3svkt4m.mongodb.net/?retryWrites=true&w=majority'
 
-mongoose
-  .connect('mongodb+srv://Mongouser:Mongodb@2023@cluster0.2tb76ef.mongodb.net/?retryWrites=true&w=majority', {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-  })
-  .then(() => console.log("DB connected successfully"))
-  .catch((error) => console.log("DB connection failed",error));
+const Employee = mongoose.model('employee',{
+    name: String,
+    age: Number
+})
+
+
 
 app.set("view engine", "ejs");
 app.get("/", (req, res) => {
@@ -22,5 +24,12 @@ app.get("/", (req, res) => {
 });
 
 app.listen(process.env.Server_port, () => {
-  console.log("Server is running on James bond port port:7000");
+    mongoose
+  .connect(SERVER, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+  })
+  .then(() => console.log("DB connected successfully"),
+   console.log("Server is running on James bond port port:7000"))
+  .catch((error) => console.log("DB connection failed",error));
 });
